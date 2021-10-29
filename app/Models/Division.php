@@ -8,5 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Division extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','colaboradores','id_parent'];
+    protected $fillable = ['name','colaboradores','division_id','level'];
+
+    public function subdivisions()
+    {
+        return $this->hasMany(Division::class);
+    }
 }
