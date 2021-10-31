@@ -14,7 +14,7 @@ class AddLevelColumnDivisionsTable extends Migration
     public function up()
     {
         Schema::table('divisions', function (Blueprint $table) {
-            $table->unsignedInteger('level')->after('colaboradores');
+            $table->unsignedInteger('level')->after('colaboradores')->default(1);
         });
     }
 
