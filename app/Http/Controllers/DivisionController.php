@@ -20,6 +20,12 @@ class DivisionController extends Controller
 
         foreach ($divisions as $index => $division) {
             $divisions[$index]->subdivisions = $division->subdivisions;
+            $divisions[$index]->division_parent = $division->divisionParent;
+
+            $divisions[$index]->division_parent_name = 'No hay división superior';
+            if (!is_null($division->divisionParent)) {
+                $divisions[$index]->division_parent_name = $division->divisionParent->name;
+            }
         }
 
         return $divisions;
