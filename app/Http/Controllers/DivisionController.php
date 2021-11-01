@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DivisionFormRequest;
 use App\Models\Division;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
@@ -47,29 +48,21 @@ class DivisionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DivisionFormRequest $request)
     {
         $data = [];
 
-        try {
-            $validated = $this->validate($request,[
-                'name' => 'required|max:45|unique:divisions',
-                'colaboradores' => 'required|numeric|gt:-1',
-                'division_id' => 'nullable'
-            ]);
-            $validated['level'] = 1;// Level por defecto
+        $request= $request->all();
+        $request['level'] = 1;// Level por defecto
 
-            // Si la nueva division es hija de otra, actualizaremos el level
-            if (isset($validated['division_id']) and !is_null($validated['division_id'])) {
-                $division = Division::find($validated['division_id']);
-                $validated['level'] = $division->level + 1;
-            }
-
-            $division = Division::create($validated);
-            $data = $division;
-        } catch (Exception $th) {
-            $data = $th->validator->errors();
+        // Si la nueva division es hija de otra, actualizaremos el level
+        if (isset($request['division_id']) and !is_null($request['division_id'])) {
+            $division = Division::find($request['division_id']);
+            $request['level'] = $division->level + 1;
         }
+
+        $division = Division::create($request);
+        $data = $division;
 
         return $data;
     }
@@ -116,35 +109,22 @@ class DivisionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(DivisionFormRequest $request, $id)
     {
         $data = [];
+        $request = $request->all();
+        $request['level'] = 1;// Level por defecto
 
-        if (!Division::exists($id)) {
-            $data['error'] = 'Division no existe';
-            return $data;
-        }
-        
         $division_to_update = Division::find($id);
-        try {
-            $validated = $this->validate($request,[
-                'name' => 'required|max:45',
-                'colaboradores' => 'required|numeric|gt:0',
-                'division_id' => 'nullable'
-            ]);
-            $validated['level'] = 1;// Level por defecto
-
-            // Si la division a actualizar es hija de otra, actualizaremos el level
-            if (!is_null($validated['division_id'])) {
-                $division = Division::find($validated['division_id']);
-                $validated['level'] = $division->level + 1;
-            }
-
-            $division_to_update->update($validated);
-            $data = $division_to_update;
-        } catch (Exception $th) {
-            $data = $th->validator->errors();
+        
+        // Si la division a actualizar es hija de otra, actualizaremos el level
+        if (isset($request['division_id']) and !is_null($request['division_id'])) {
+            $division = Division::find($request['division_id']);
+            $request['level'] = $division->level + 1;
         }
+
+        $division_to_update->update($request);
+        $data = $division_to_update;
 
         return $data;
     }
