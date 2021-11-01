@@ -53,14 +53,14 @@ class DivisionController extends Controller
 
         try {
             $validated = $this->validate($request,[
-                'name' => 'required|max:45',
+                'name' => 'required|max:45|unique:divisions',
                 'colaboradores' => 'required|numeric|gt:-1',
                 'division_id' => 'nullable'
             ]);
             $validated['level'] = 1;// Level por defecto
 
             // Si la nueva division es hija de otra, actualizaremos el level
-            if (!is_null($validated['division_id'])) {
+            if (isset($validated['division_id']) and !is_null($validated['division_id'])) {
                 $division = Division::find($validated['division_id']);
                 $validated['level'] = $division->level + 1;
             }
