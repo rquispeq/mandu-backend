@@ -21,3 +21,32 @@ Realización del proyecto Laravel propuesto por la Empresa Start Up Mandu
 - Tests
 - Factory
 - Seeders
+
+## Consumo de API
+1. Se debe ejecutar el aplicativo con el comando php artisan serve:
+2. Se debe usar el aplicativo postman
+3. Se debe establecer la propiedad Accept con valor application/json en el header de la petición
+
+### URLS
+#### Listado de divisions: 
+http://127.0.0.1:8000/api/division
+
+#### Creación de división
+http://127.0.0.1:8000/api/division (por metodo POST)
+parametros:
+- name
+- colaboradores
+- división_id (opcional)
+
+#### Consulta de una division: 
+http://127.0.0.1:8000/api/division/1
+
+#### Edición de división
+http://127.0.0.1:8000/api/division (por metodo PUT)
+parametros:
+- name
+- colaboradores
+- división_id (opcional)
+
+#### Eliminación de división
+http://127.0.0.1:8000/api/division/1 (por metodo DELETE)
